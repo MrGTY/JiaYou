@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zhaojisys.dao.user.SumMapper">
+	<!--查询当月燃油总收油量和总提取量 -->
+	<select id="findOil" resultType="Oilrecord">
+		select sum(income) as
+		sumIncome,sum(expenditure) as sumExpenditure from
+		oilrecord
+		where
+		date_format(operationTime,'%Y-%m')=date_format(now(),'%Y-%m')
+	</select>
+	<!--查询当月燃油总轮胎金额和轮胎提取额 -->
+	<select id="findTyre" resultType="tyredatails">
+		select sum(income) as
+		sumIncome,sum(expenditure) as sumExpenditure from
+		tyredatails
+		where
+		date_format(operationData,'%Y-%m')=date_format(now(),'%Y-%m')
+	</select>
+	<!--查询当月新增站点个数 -->
+	<select id="numGasstation" resultType="int">
+		select count(*) from
+		gasstation where gsType=#{gsType} and
+		date_format(creatData,'%Y-%m')=date_format(now(),'%Y-%m')
+	</select>
+	<!--查询当月新增会员个数 -->
+	<select id="numEmp" resultType="int">
+		select count(*) from vipuserinfo
+		where date_format(createTime,'%Y-%m')=date_format(now(),'%Y-%m')
+	</select>
+	<!--查询燃油总收油量 -->
+	<select id="sumOil" resultType="int">
+		select IFNULL(sum(income),0) from
+		oilrecord where operationType=2
+	</select>
+	<!--查询轮胎总提取额 -->
+	<select id="sumTyre" resultType="int">
+		select IFNULL(sum(income),0) from
+		tyredatails where operationType=2
+	</select>
+	<!--查询燃油/轮胎待提取额/待提取量 -->
+	<select id="sumOilTyreDraw" resultType="int">
+		select IFNULL(sum(amountDrawn),0)
+		from extractapply
+		where businessType=#{businessType} and
+		status=#{status}
+	</select>
+	<!--查询燃油/轮胎个数 -->
+	<select id="sumOilTyreStation" resultType="int">
+		select count(id) from
+		gasstation
+		where gsType=#{gsType}
+	</select>
+	<!--查询会员个数 -->
+	<select id="sumVipUser" resultType="int">
+		select count(1) from
+		vipuserinfo where userType=#{userType}
+	</select>
+	<!--首页本月轮胎金额汇总 -->
+	<select id="benyue" resultType="tyredatails">
+		select date(operationData) AS
+		operationData,SUM(income) AS income from tyredatails
+		where
+		date_format(operationData,'%Y-%m')=date_format(now(),'%Y-%m')
+		group by
+		date(operationData)
+	</select>
+	<!--首页本月燃油量汇总 -->
+	<select id="oilMonSum" resultType="oilrecord">
+		select date(operationTime) AS
+		operationTime,SUM(income) AS income from oilrecord
+		where
+		date_format(operationTime,'%Y-%m')=date_format(now(),'%Y-%m')
+		group by
+		date(operationTime)
+	</select>
+	<!--首页本月燃油提取额汇总 -->
+	<select id="oilDraWMonSum" resultType="oilrecord">
+		select date(operationTime)
+		AS operationTime,SUM(expenditure) AS expenditure from oilrecord
+		where
+		date_format(operationTime,'%Y-%m')=date_format(now(),'%Y-%m')
+		group by
+		date(operationTime)
+	</select>
+	<!--首页本月轮胎提取额汇总 -->
+	<select id="tyreDraWMonSum" resultType="tyredatails">
+		select
+		date(operationData) AS operationData,SUM(expenditure) AS expenditure
+		from tyredatails
+		where
+		date_format(operationData,'%Y-%m')=date_format(now(),'%Y-%m')
+		group by
+		date(operationData)
+	</select>
+	<!--首页本月新增会员个数 -->
+	<select id="newVipNum" resultType="VipuserinfoModel">
+		select createTime,count(id) AS id from vipuserinfo
+		where
+		date_format(createTime,'%Y-%m')=date_format(now(),'%Y-%m')
+		group by
+		date(createTime)
+	</select>
+	<!--首页本月燃油交易量 -->
+	<select id="oilSumDealNum" resultType="oilrecord">
+		select
+		date(operationTime)
+		AS operationTime,count(id) AS id from oilrecord
+		where
+		date_format(operationTime,'%Y-%m')=date_format(now(),'%Y-%m')
+		group by
+		date(operationTime)
+	</select>
+	<!--首页本月轮胎交易量 -->
+	<select id="tyreSumDealNum" resultType="tyredatails">
+		select
+		date(operationData) AS
+		operationData,count(id) AS id from tyredatails
+		where date_format(operationData,'%Y-%m')=date_format(now(),'%Y-%m')
+		group by date(operationData)
+	</select>
+	<!-- -->
+	<!-- -->
+	<!-- -->
+	<!--首页年度轮胎金额汇总 -->
+	<select id="yearTyreSum" resultType="tyredatails">
+		select
+		date_format(operationData, '%Y-%m') AS
+		operationData,SUM(income) AS
+		income from tyredatails
+		where
+		date_format(operationData,'%Y')=date_format(now(),'%Y')
+		group by
+		date_format(operationData, '%Y-%m');
+	</select>
+	<!--首页年度燃油量汇总 -->
+	<select id="yearOilMonSum" resultType="oilrecord">
+		select
+		operationTime,SUM(income) AS
+		income from oilrecord
+		where
+		date_format(operationTime,'%Y')=date_format(now(),'%Y')
+		group by
+		date_format(operationTime, '%Y-%m')
+	</select>
+	<!--首页年度燃油提取额汇总 -->
+	<select id="yearOilDraWMonSum" resultType="oilrecord">
+		select operationTime,SUM(expenditure)
+		AS expenditure from oilrecord
+		where
+		date_format(operationTime,'%Y')=date_format(now(),'%Y')
+		group by
+		date_format(operationTime, '%Y-%m')
+	</select>
+	<!--首页年度燃油提取额汇总 -->
+	<select id="yearTyreDraWMonSum" resultType="tyredatails">
+		select operationData,SUM(expenditure)
+		AS expenditure
+		from tyredatails
+		where
+		date_format(operationData,'%Y')=date_format(now(),'%Y')
+		group by
+		date_format(operationData, '%Y-%m')
+	</select>
+	<!--首页年度新增会员个数 -->
+	<select id="yearNewVipNum" resultType="vipuserinfo">
+		select 
+		createTime,count(id) AS id from
+		vipuserinfo
+		where date_format(createTime,'%Y')=date_format(now(),'%Y')
+		group by date_format(createTime, '%Y-%m')
+	</select>
+	<!--首页年度燃油交易量 -->
+	<select id="yearOilSumDealNum" resultType="oilrecord">
+		select operationTime,count(id) AS id
+		from oilrecord
+		where
+		date_format(operationTime,'%Y')=date_format(now(),'%Y')
+		group by
+		date_format(operationTime, '%Y-%m')
+	</select>
+	<!--首页年度轮胎交易量 -->
+	<select id="yearTyreSumDealNum" resultType="tyredatails">
+		select 
+		operationData,count(id) AS id
+		from tyredatails
+		where
+		date_format(operationData,'%Y')=date_format(now(),'%Y')
+		group by
+		date_format(operationData, '%Y-%m')
+	</select>
+	
+	<select id="chong" resultType="Integer">
+		select sum(income) from oilrecord where operationType=0
+	</select>
+		<select id="tiqu" resultType="Integer">
+		SELECT SUM(amountDrawn) FROM extractapply
+		WHERE DATE_FORMAT(approveData,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND businessType=0 AND STATUS=1
+	</select>
+	<select id="tiqu2" resultType="Integer">
+		SELECT SUM(amountDrawn) FROM extractapply
+		WHERE DATE_FORMAT(approveData,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND businessType=1 AND STATUS=1
+	</select>
+	
+	<!-- ========= -->
+	<select id="getSumQuota" resultType="int">
+		SELECT SUM(quota)
+		FROM gasstation
+		WHERE logicId=1
+	</select>
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zhaojisys.dao.app.ShopMapper">
+	<delete id="delShopBy_Id" parameterType="int">
+		delete from shop where id=#{id}
+	</delete>
+	<select id="shopAllList" resultType="Shop">
+		SELECT * FROM shop
+		<trim prefix="where" prefixOverrides="and">
+			<if test="brand!=null">
+				and	brand=#{brand}
+			</if>
+			<if test="specifications!=null">
+				and	specifications=#{specifications}
+			</if>
+			<if test="material!=null">
+				and	material=#{material}
+			</if>
+		</trim>
+		order by creatData desc
+		limit #{currentPageNo},#{pageSize}
+	</select>
+	<insert id="addShop" parameterType="shop">
+		INSERT INTO shop
+		(brand,specifications,material,marque,price,pathimg,gId,creatData)
+		VALUES(#{brand},#{specifications},#{material},#{marque},#{price},#{pathimg},#{gId},#{creatData})
+	</insert>
+	<select id="getShopById" parameterType="int" resultType="ShopModel">
+		SELECT s.*,g.`status`,g.logicId
+		FROM shop s 
+		INNER JOIN gasstation g ON g.id=s.gId
+		where s.id=#{id}
+	</select>
+	<update id="modifyShopById" parameterType="shop">
+		update shop
+		<trim prefix="set" suffixOverrides=",">
+			<if test="brand!=null">brand=#{brand},</if>
+			<if test="specifications!=null">specifications=#{specifications},</if>
+			<if test="material!=null">material=#{material},</if>
+			<if test="marque!=null">marque=#{marque},</if>
+			<if test="price!=null">price=#{price},</if>
+			<if test="pathimg!=null">pathimg=#{pathimg},</if>
+			<if test="creatData!=null">creatData=#{creatData},</if>
+		</trim>
+		where id=#{id}
+	</update>
+	<update id="buyTyre">
+		update vipuserinfo
+		<trim prefix="set" suffixOverrides=",">
+			<if test="money!=-1">tyreBalance=#{money}</if>
+		</trim>
+		where id=#{id}
+	</update>
+	<insert id="buyTyreHistory" parameterType="tyredatails">
+		insert into tyredatails
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="operationData!=null">operationData,</if>
+			<if test="vipUserId!=-20">vipUserId,</if>
+			<if test="typrSpec!=null">typrSpec,</if>
+			<if test="tireModel!=null">tireModel,</if>
+			<if test="typrMaterial!=null and  typrMaterial!='' ">typrMaterial,</if>
+			<if test="quantity!=-20">quantity,</if>
+			<if test="income!=-20">income,</if>
+			<if test="expenditure!=-20">expenditure,</if>
+			<if test="balance!=-20">balance,</if>
+			<if test="operationType!=-20">operationType,</if>
+			<if test="zdid!=-20">zdid,</if>
+			<if test="infotype!=null">infotype,</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="operationData!=null">#{operationData},</if>
+			<if test="vipUserId!=-20">#{vipUserId},</if>
+			<if test="typrSpec!=null">#{typrSpec},</if>
+			<if test="tireModel!=null">#{tireModel},</if>
+			<if test="typrMaterial!=null and  typrMaterial!=''">#{typrMaterial},</if>
+			<if test="quantity!=-20">#{quantity},</if>
+			<if test="income!=-20">#{income},</if>
+			<if test="expenditure!=-20">#{expenditure},</if>
+			<if test="balance!=-20">#{balance},</if>
+			<if test="operationType!=-20">#{operationType},</if>
+			<if test="zdid!=-20">#{zdid},</if>
+			<if test="infotype!=null">#{infotype},</if>
+		</trim>
+	</insert>
+	<select id="lastMaxBuyshopBy_Id" parameterType="int" resultType="date">
+		SELECT MAX(operationData) FROM tyredatails
+		WHERE vipUserId=#{vipUserId} and operationType=2
+	</select>
+</mapper>

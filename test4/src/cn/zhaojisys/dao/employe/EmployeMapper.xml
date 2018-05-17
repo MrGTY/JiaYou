@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zhaojisys.dao.employe.EmployeMapper">
+	<!-- 查询所有员工信息并分页 -->
+	<select id="findAllEmploye" resultType="EmployeInfo">
+		select
+		id,loginName,userName,position,
+		department,mobilePhone,email from
+		employeinfo where trg=1
+		ORDER BY createData DESC
+		limit
+		#{pageNo},#{pageSize}
+	</select>
+	<!-- 新增员工信息 -->
+	<insert id="addEmploye" parameterType="EmployeInfo">
+		insert into employeinfo
+		(`loginName`,
+		`password`,`userName`,`department`,
+		`position`,`mobilePhone`,`email`,`QQ`)
+		values
+		(#{loginName},#{password},#{userName},
+		#{department},#{position},#{mobilePhone},#{email},#{QQ})
+	</insert>
+	<!-- 查询员工手机号码是否存在 -->
+	<select id="selectPhone" resultType="EmployeInfo">
+		select mobilePhone from employeinfo where mobilePhone=#{mobilePhone}
+	</select>
+	<!-- 查询员工登录名是否存在 -->
+	<select id="selectName" resultType="EmployeInfo">
+		select loginName from employeinfo where loginName=#{loginName}
+	</select>
+	<!-- 通过Id查询员工信息并点击编辑 -->
+	<select id="selectEmployeById" resultType="EmployeInfo"
+		parameterType="int">
+		select * from employeinfo where id=#{id}
+	</select>
+	<!-- 编辑员工信息 -->
+	<update id="updateEmploye" parameterType="EmployeInfo">
+		update employeinfo
+		<trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+			<if test="loginName != null">`loginName`=#{loginName},</if>
+			<if test="password != null">`password`=#{password},</if>
+			<if test="userName !=null">`userName`=#{userName},</if>
+			<if test="department != null">`department`=#{department},</if>
+			<if test="position != null">`position`=#{position},</if>
+			<if test="mobilePhone != null">`mobilePhone`=#{mobilePhone},</if>
+			<if test="email != null">`email`=#{email},</if>
+			<if test="QQ != null">`QQ`=#{QQ},</if>
+		</trim>
+	</update>
+	<!-- 删除员工信息 -->
+	<update id="deleteEmploye" parameterType="String">
+		update employeinfo set
+		trg=0 where id=#{id}
+	</update>
+	<!-- 查询员工信息总数 -->
+	<select id="count" resultType="int">
+		select count(1) from employeinfo
+		where trg=1
+	</select>
+</mapper>

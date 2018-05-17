@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhaojisys.dao.vipuserinfo.VipuserinfoMapper">
+	<!-- 按条件查找vip用户信息 -->
+	<select id="getAllbyCondition" resultType="vipuserinfo">
+		SELECT * FROM  vipuserinfo where deleteTag=1 
+		<trim>
+			<if test="null!=vipName and vipName != ''"> and vipName like CONCAT ('%',#{vipName},'%') </if>
+			
+			<if test="null!=userName and userName != ''"> and userName like CONCAT ('%',#{userName},'%') </if>
+			
+			<if test="null!=busNum and busNum != ''"> and busNum like CONCAT ('%',#{busNum},'%') </if>
+			
+			<if test="null!=userType"> and userType = #{userType} </if>
+			
+			<if test="null!=mycarId and mycarId != ''"> and mycarId=#{mycarId}</if>
+		</trim>
+			order by createTime DESC limit #{pageNo},#{pageSize}
+					<!-- pageNo为当前页码   pageSize为页面信息条数 -->
+	</select>
+	
+	<!-- 根据id查询所有信息 -->
+	<select id="getAllbyId" resultType="vipuserinfo" >
+		SELECT * FROM  vipuserinfo where deleteTag=1 
+			<if test="null!=id"> 
+				and id = #{id}
+			</if>
+	</select>
+
+	<!-- 实现展示vip用户信息分页功能 查询总计录数 -->
+	<select id="getAllcount" resultType="int">
+		SELECT COUNT(1) FROM vipuserinfo  where deleteTag=1 
+		<trim >
+			<if test="null!=vipName and vipName != ''"> and vipName like CONCAT ('%',#{vipName},'%') </if>
+			
+			<if test="null!=userName and userName != ''"> and userName like CONCAT ('%',#{userName},'%') </if>
+			
+			<if test="null!=busNum and busNum != ''"> and busNum like CONCAT ('%',#{busNum},'%') </if>
+			
+			<if test="null!=userType"> and userType = #{userType} </if>
+			
+			<if test="null!=mycarId and mycarId != ''"> and mycarId=#{mycarId}</if>
+		</trim>
+	</select>
+	
+	
+	<!--  <resultMap type="oilrecord" id="Oilrecordresult">
+		<result property="operationTime" column="operationTime"/>
+		<result property="operationType" column="operationType"/>
+		<result property="income" column="income"/>
+		<result property="expenditure" column="expenditure"/>
+		<result property="remaining" column="remaining"/>
+	</resultMap>
+	<resultMap type="Vipuserinfo" id="Vipuserinforesult">
+		<result property="vipName" column="vipName"/>
+		<association property="oilrecord" javaType="oilrecord" resultMap="Oilrecordresult"/>
+	</resultMap>-->
+	
+	<!-- 查询燃油收支明细 -->
+	<resultMap type="Vipuserinfo" id="Vipuserinforesult">
+		<id property="id" column="id"/>
+		<result property="vipName" column="vipName"/>
+		<result property="qkBalance" column="qkBalance"/>
+	</resultMap>
+	<resultMap type="Gasstation" id="Gasstationresult">
+		<id property="id" column="id"/>
+		<result property="siteName" column="siteName"/>
+	</resultMap>
+	<resultMap type="oilrecord" id="Oilrecordresult">
+		<result property="operationTime" column="operationTime"/>
+		<result property="operationType" column="operationType"/>
+		<result property="friendId" column="friendId"/>
+		<result property="gsId" column="gsId"/>
+		<result property="income" column="income"/>
+		<result property="fee" column="fee"/>
+		<result property="upoiltype" column="upoiltype"/>
+		<result property="expenditure" column="expenditure"/>
+		<result property="remaining" column="remaining"/>
+		<association property="vipuserinfo" javaType="Vipuserinfo" resultMap="Vipuserinforesult"/>
+		<association property="gasstation" javaType="Gasstation" resultMap="Gasstationresult"/>
+	</resultMap>
+	<select id="getOilrelist" resultMap="Oilrecordresult">
+		SELECT o.*  ,g.siteName
+		FROM vipuserinfo v,oilrecord o LEFT JOIN gasstation g ON o.gsId=g.id
+		 WHERE v.id=o.vipUserId and v.deleteTag=1 and o.infotype=1
+		<trim>
+			<if test="operationType!=null">
+				and o.operationType=#{operationType}
+			</if>
+			<if test="paymentType==0">
+				and o.income !=0
+			</if>
+			<if test="paymentType==1">
+				and o.expenditure !=0
+			</if>
+			<if test="id!=null">
+				and o.vipUserId=#{id}
+			</if>
+			<if test="startTime!=null and startTime !=''">
+				and o.operationTime &gt;= #{startTime}
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				AND o.operationTime &lt;= #{endTime}
+			</if>
+			
+		</trim>    
+		  GROUP BY o.id  order by o.operationTime DESC limit #{pageNo},#{pageSize}
+	</select>
+	<!-- 实现查询燃油收支明细信息分页功能 查询总计路数 -->
+		<select id="getoilCount" resultType="int">
+		SELECT COUNT(1) FROM vipuserinfo v,oilrecord o where deleteTag=1 and v.id=o.vipUserId 
+		and o.infotype=1
+		<trim >
+			<if test="id!=null">
+				and v.id=#{id}
+			</if>
+			<if test="operationType!=null">
+				and o.operationType=#{operationType}
+			</if>
+			<if test="paymentType==0">
+				and o.income !=0
+			</if>
+			<if test="paymentType==1">
+				and o.expenditure !=0
+			</if>
+			<if test="startTime!=null and startTime !=''">
+				and operationTime &gt;= #{startTime}
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				AND operationTime &lt;= #{endTime}
+			</if>
+		</trim>
+		</select>
+	<!-- 查询轮胎收支明细 -->
+	<resultMap type="Tyredatails" id="Tyredatailsresult" >
+		<result property="operationData" column="operationData"/>
+		<result property="operationType" column="operationType"/>
+		<result property="uptyreType" column="uptyreType"/>
+		<result property="income" column="income"/>
+		<result property="zdid" column="zdid"/>
+		<result property="expenditure" column="expenditure"/>
+		<result property="balance" column="balance"/>
+		<association property="vipuserinfo" javaType="Vipuserinfo" resultMap="Vipuserinforesult"/>
+		<association property="gasstation" javaType="Gasstation" resultMap="Gasstationresult"/>
+	</resultMap>
+	<select id="getTyrerelist" resultMap="Tyredatailsresult">
+		SELECT g.siteName,t.* 
+		FROM vipuserinfo v,tyredatails t LEFT JOIN gasstation g ON  t.zdid=g.id
+		 WHERE  v.id=t.vipUserId and deleteTag=1 and t.infotype=1
+		<trim>
+			<if test="paymentType==0">
+				and t.income !=0
+			</if>
+			<if test="paymentType==1">
+				and t.expenditure !=0
+			</if>
+			<if test="id!=null">
+				and t.vipUserId=#{id}
+			</if>
+			<if test="startTime!=null and startTime !=''">
+				and operationData &gt;= #{startTime}
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				AND operationData &lt;= #{endTime}
+			</if>	
+		</trim>    
+		 GROUP BY t.id order by t.operationData DESC limit #{pageNo},#{pageSize}
+	</select>
+	
+	<!-- 实现查询轮胎收支明细信息分页功能 查询总计路数 -->
+		<select id="getTyreCount" resultType="int">
+		SELECT COUNT(1) FROM vipuserinfo v,tyredatails t where deleteTag=1 and v.id=t.vipUserId
+		and t.infotype=1
+		<trim >
+			<if test="id!=null">
+				and v.id=#{id}
+			</if>
+			<if test="paymentType==0">
+				and t.income !=0
+			</if>
+			<if test="paymentType==1">
+				and t.expenditure !=0
+			</if>
+			<if test="startTime!=null and startTime !=''">
+				and operationData &gt;= #{startTime}
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				AND operationData &lt;= #{endTime}
+			</if>
+		</trim>
+	</select>
+	
+	<!-- 查询收款记录明细 -->
+	<resultMap type="EmployeInfo" id="EmployeInforesult">
+		<id property="id" column="id"/>
+		<result property="loginName" column="loginName"/>
+	</resultMap>
+	<resultMap type="Gathering" id="GatheringResult">
+		<id property="id" column="id"/>
+		<result property="Payamount"  column="Payamount"/>
+		<result property="createTime"  column="createTime"/>
+		<result property="ljqk" column="ljqk"/>
+		<association property="vipuserinfo" javaType="Vipuserinfo" resultMap="Vipuserinforesult"/>
+		<association property="employeInfo" javaType="EmployeInfo" resultMap="EmployeInforesult"/>
+	</resultMap>
+	<select id="getCollist" resultMap="GatheringResult">
+		SELECT c.*,v.vipName,v.qkBalance,e.loginName FROM collection c,vipuserinfo v,employeinfo e 
+		 WHERE v.id=c.vipId AND c.empId=e.id
+		<trim>
+			<if test="id!=null">
+				and v.id=#{id}
+			</if>
+			<if test="vipName!=null and vipName !='' ">
+				and v.vipName  like CONCAT ('%',#{vipName},'%')
+			</if>
+			<if test="startTime!=null and startTime !='' ">
+				and c.createTime &gt;= #{startTime}
+			</if>
+			<if test="endTime!=null and endTime!='' ">
+				and c.createTime &lt;= #{endTime}
+			</if>
+		</trim>
+		order by c.createTime DESC limit #{pageNo},#{pageSize}
+	</select>
+	<!-- 查询收款记录明细总记录数 -->  
+	<select id="getcollCount" resultType="int">
+		SELECT COUNT(1) FROM collection c,vipuserinfo v,employeinfo e 
+		WHERE v.id=c.vipId AND c.empId=e.id
+		<trim>
+			<if test="id!=null">
+				and v.id=#{id}
+			</if>
+			<if test="vipName!=null and vipName !='' ">
+				and v.vipName  like CONCAT ('%',#{vipName},'%')
+			</if>
+			<if test="startTime!=null and startTime !='' ">
+				and createTime &gt;= #{startTime}
+			</if>
+			<if test="endTime!=null and endTime!='' ">
+				and createTime &lt;= #{endTime}
+			</if>
+		</trim>
+	</select>
+	
+	<!--根据id 修改会员信息 -->
+	<update id="updataUser" parameterType="Vipuserinfo">
+		update Vipuserinfo
+		<trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+			<if test="stateTag!=null">
+				stateTag=#{stateTag},
+			</if>
+			<if test="oilMass!=null">
+				stateTag=#{oilMass},
+			</if>
+			<if test="tyreBalance!=null">
+				stateTag=#{tyreBalance},
+			</if>
+			<if test="password!=null">
+				stateTag=#{password},
+			</if>
+		</trim>
+	</update>
+	
+	<!-- 根据id删除用户 -->
+	<update id="deleteUser" parameterType="int">
+		UPDATE Vipuserinfo SET deleteTag=0 WHERE id=#{id} 
+	</update>
+	
+	<!-- 根据id更新密码 -->
+	<update id="updatepwd">
+		UPDATE Vipuserinfo SET password=#{password} WHERE id=#{id} 
+	</update>
+	
+	<!-- 修改分类 -->
+	<update id="changetype">
+		 UPDATE vipuserinfo 
+		<trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+			<if test="userType!=null">
+				userType = #{userType},
+			</if>
+			<if test="remark!=null and remark!=''">
+				remark = #{remark},
+			</if>
+			<if test="userType==0">
+				mycarId = #{mycarId},logicId = #{logicId},vipName=#{remark}
+			</if>
+			<if test="userType==1">
+				mycarId = null,logicId = null,vipName=#{remark}
+			</if>
+		</trim>
+	
+	</update>
+	
+	<!-- 插入收款记录 -->
+	<insert id="skRecord" >
+	INSERT INTO collection (vipId,empId,type,Payamount,remark,createTime,ljqk,oil) 
+		VALUES (#{vipId},#{empId},#{type},#{moneyname},#{remark},#{createTime},#{ljqk},#{oil})
+	</insert>
+	
+	<!-- 更新欠款金额 -->
+	<update id="qkupdate" >
+		UPDATE vipuserinfo  
+		<trim prefix="set" suffixOverrides=","  suffix="WHERE id=#{id}">
+			<if test="qkBalance!=null">
+				qkBalance =#{qkBalance}
+			</if>
+		</trim>
+	</update>
+	
+	<!-- 会员充值 -->
+	<update id="czupdate">
+		UPDATE vipuserinfo
+		<trim prefix="set" suffixOverrides=","  suffix="WHERE id=#{id}">
+			<if test="options==0 and optionsRad==0">
+				oilMass=#{oilname},
+			</if>
+			<if test="options==0 and optionsRad==1">
+				oilMass=#{oilname},qkBalance=#{moneyname},
+			</if>
+			<if test="options==1 and optionsRad==0">
+				tyreBalance=#{tyreBalance},
+			</if>
+			<if test="options==1 and optionsRad==1">
+				qkBalance=#{moneyname},tyreBalance=#{tyreBalance},	
+			</if>
+			<if test="remark!=null and remark!='' ">
+				remark=#{remark},
+			</if>
+		</trim>
+	</update>
+	<!-- 保存燃油记录 -->
+	<insert id="oilinsert">
+		INSERT INTO oilrecord (vipUserId,operationTime,income,remaining,operationType)
+		values(#{id},#{operationTime},#{moneyname},#{oilname},#{options})
+	</insert>	
+	<!-- 保存轮胎记录 -->
+	<insert id="tyerinsert">
+		INSERT INTO tyredatails (vipUserId,operationData,income,balance,operationType,uptyreType)
+		values(#{id},#{operationData},#{moneyname},#{balance},#{options},#{type})
+	</insert>
+	
+	<select id="getVipuserinfoByName" resultType="Vipuserinfo" >
+		select id,vipName,phoneNum,oilMass from vipuserinfo
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="name!=null and name!=''">
+				and phoneNum like CONCAT ('%',#{name},'%')
+			</if>
+			and deleteTag=1
+		</trim>
+	</select>
+	<select id="getGasstationByName" resultType="Gasstation">
+		select id,code,siteName,quota from gasstation
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="name!=null and name!=''">
+				and siteName like CONCAT ('%',#{name},'%')
+			</if>
+			and logicId=1 and gsType=0
+		</trim>
+	</select>
+	<select id="getNewVipuserinfoByName" resultType="Vipuserinfo">
+		select id,vipName,phoneNum,userName,oilMass,stateTag from vipuserinfo where phoneNum=#{name} and deleteTag=1
+	</select>
+	<select id="getNewGasstationByName" resultType="Gasstation">
+		select id,siteName,code,quota,charge,status from gasstation where code=#{name} and logicId=1
+	</select>
+	<select id="getVipuserinfoByNameCount" resultType="int">
+		select count(1) from vipuserinfo where phoneNum=#{name} and deleteTag=1
+	</select>
+	<update id="updateVipuserinfoOilMassJia">
+		update vipuserinfo set oilMass=oilMass+#{leave} where id=#{id}
+	</update>
+	<update id="updateVipuserinfoOilMassJian">
+		update vipuserinfo set oilMass=oilMass-#{leave} where id=#{id}
+	</update>
+	<update id="updateGasstationQuota" >
+		update gasstation set quota=quota+#{leave} where id=#{id}
+	</update>
+	<select id="getNewVipByUserType" resultType="Vipuserinfo" >
+		select id,vipName from vipuserinfo
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="name!=null and name!=''">
+				and vipName like CONCAT ('%',#{name},'%')
+			</if>
+			and deleteTag=1 and userType=1
+		</trim>
+	</select>
+	<select id="getVipuserinfoBylogicId" resultType="Vipuserinfo">
+		select *from vipuserinfo where id=#{logicId}
+	</select>
+	<insert id="addVip">
+		insert into vipuserinfo(vipName,userName,phoneNum,password,busNum,createTime,uploadImg) values(#{vipName},
+		#{userName},#{phoneNum},#{password},#{busNum},#{createTime},#{uploadImg})
+	</insert>
+	
+	<update id="updateVip">
+		update vipuserinfo 
+			<trim prefix="set" suffixOverrides=","  suffix="WHERE id=#{id}">
+			<if test="vipName!=null and vipName.trim()!='' ">
+				vipName=#{vipName},
+			</if>
+			<if test="userName!=null and userName.trim()!=''">
+				userName=#{userName},
+			</if>
+			<if test="phoneNum!=null and phoneNum.trim()!=''">
+				phoneNum=#{phoneNum},
+			</if>
+			<if test="password!=null and password.trim()!=''">
+				password=#{password},	
+			</if>
+			<if test="busNum!=null  and busNum.trim()!='' ">
+				busNum=#{busNum},
+			</if>
+			<if test="uploadImg!=null and uploadImg.trim()!=''">
+				uploadImg=#{uploadImg},
+			</if>
+		</trim>
+	</update>
+</mapper>
+
+

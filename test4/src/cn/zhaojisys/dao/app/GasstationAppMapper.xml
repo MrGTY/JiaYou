@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zhaojisys.dao.app.GasstationAppMapper">
+    <select id="shopList" parameterType="int" resultType="shop">
+    	SELECT id,brand,specifications,material,marque,price,pathimg,gId
+		FROM shop
+		WHERE gId=#{gId}
+		order by  creatData desc
+		limit #{currentPageNo},#{pageSize}
+    </select>
+	
+</mapper>

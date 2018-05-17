@@ -1,0 +1,42 @@
+.gg_img_size{
+    width: 3rem;
+    height: 3rem;
+    display: inline-block;
+}
+.width50{
+    float: left;
+    width: 50%;
+}
+.posizion_div{
+    text-align: center;
+    position: relative;
+    margin-bottom:1rem;
+    padding:1rem 3%;
+    z-index:1;
+    width: 50%;
+}
+.float_left{
+    float: left;
+}
+.float_right{
+    float: right;
+}
+/*水平滚动  */
+@-webkit-keyframes move
+        {
+            0%{
+                left:0;
+            }
+            100%
+            {
+                left:-150%;
+            }
+        }
+        #wrap{ width:150%;height:3rem;line-height:3rem; border:1px solid #6083fe; position:relative;margin:0 auto; overflow:hidden;}
+        #list{ position:absolute;left:0;top:0;margin:0;padding:0; -webkit-animation:18s move infinite linear; width:100%;}
+        #list li{ list-style:none;width:150%;height:3rem;line-height:3rem;font-size:1.8rem;  border:1px solid #6083fe;background:#6083fe; color:#fff; float:left;}
+        #wrap:hover #list{ -webkit-animation-play-state:paused;}
+
+#wsrap span{
+	padding-left: 30px;
+}

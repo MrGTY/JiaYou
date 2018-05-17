@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhaojisys.dao.gg.AdminSummaryMapper">
+	<select id="yearOilClosedTotal" resultType="Oilrecord">
+		SELECT SUM(income) AS
+		income,COUNT(1) AS id,operationTime FROM oilrecord
+		WHERE
+		DATE_FORMAT(operationTime,'%Y')=DATE_FORMAT(NOW(),'%Y') AND
+		infotype=2
+		GROUP BY DATE_FORMAT(operationTime,'%Y-%m')
+	</select>
+	<select id="yearOilextractTotal" resultType="Tyredatails">
+		SELECT SUM(income)
+		AS income,COUNT(1) AS id ,operationData FROM tyredatails
+		WHERE
+		DATE_FORMAT(operationData,'%Y')=DATE_FORMAT(NOW(),'%Y') AND
+		infotype=2
+		GROUP BY DATE_FORMAT(operationData,'%Y-%m')
+	</select>
+	<select id="yearOilTradingCount" resultType="extractapply">
+		SELECT
+		SUM(amountDrawn) AS amountDrawn,approveData FROM extractapply
+		WHERE
+		DATE_FORMAT(approveData,'%Y')=DATE_FORMAT(NOW(),'%Y') AND STATUS=1
+		AND
+		businessType=0
+		GROUP BY DATE_FORMAT(approveData,'%Y-%m')
+	</select>
+	<select id="yeartireCount" resultType="extractapply">
+		SELECT SUM(amountDrawn) AS
+		amountDrawn,approveData FROM extractapply
+		WHERE
+		DATE_FORMAT(approveData,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND
+		STATUS=1 AND businessType=1
+		GROUP BY DATE_FORMAT(approveData,'%Y-%m')
+	</select>
+	<select id="yeartireextractCount" resultType="vipuserinfo">
+		SELECT
+		COUNT(1) id,createTime
+		FROM `vipuserinfo` WHERE
+		DATE_FORMAT(createTime,'%Y')=DATE_FORMAT(NOW(),'%Y') AND deleteTag=1
+		GROUP BY DATE_FORMAT(createTime,'%Y-%m')
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+	<select id="oilList1" resultType="Oilrecord">
+		SELECT SUM(income) AS
+		income,COUNT(id) id,operationTime FROM oilrecord
+		WHERE
+		DATE_FORMAT(operationTime,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND
+		infotype=2 GROUP BY DATE_FORMAT(operationTime,'%Y-%m-%d')
+
+	</select>
+	<select id="trilList1" resultType="tyredatails">
+		SELECT SUM(income) AS
+		income,COUNT(1) AS id,operationData FROM tyredatails
+		WHERE
+		DATE_FORMAT(operationData,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND
+		infotype=2 GROUP BY DATE_FORMAT(operationData,'%Y-%m-%d')
+	</select>
+	<select id="oilextractapply1" resultType="ExtractApply">
+		SELECT SUM(amountDrawn)
+		AS amountDrawn,approveData FROM extractapply
+		WHERE
+		DATE_FORMAT(approveData,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND
+		STATUS=1 AND businessType=0
+		GROUP BY
+		DATE_FORMAT(approveData,'%Y-%m-%d')
+	</select>
+	<select id="tractapply1" resultType="ExtractApply">
+		SELECT SUM(amountDrawn) AS
+		amountDrawn,approveData FROM extractapply
+		WHERE
+		DATE_FORMAT(approveData,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND
+		STATUS=1 AND businessType=1
+		GROUP BY
+		DATE_FORMAT(approveData,'%Y-%m-%d')
+	</select>
+	<select id="vipConut" resultType="Vipuserinfo">
+		SELECT COUNT(1) id,createTime FROM
+		`vipuserinfo` WHERE
+		DATE_FORMAT(createTime,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND
+		deleteTag=1
+		GROUP BY DATE_FORMAT(createTime,'%Y-%m-%d')
+	</select>
+
+
+
+</mapper>

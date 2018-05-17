@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zhaojisys.dao.app.CarList">
+<select id="carList" resultType="Vipuserinfo">
+		select id,busNum,userName,phoneNum,oilMass from vipuserinfo
+		where
+		<if test="id !=0">
+		id=#{id} 
+		</if>
+		<if test="logicId !=0">
+		logicId=#{logicId} limit #{pageNo},10
+		</if>
+		 
+		
+		
+	</select>
+
+</mapper>

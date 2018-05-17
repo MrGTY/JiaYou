@@ -1,0 +1,17 @@
+.wrap{
+    margin: 50px 50px;
+    border: 1px silver solid;
+}
+.tips{
+    margin: 20px;
+}
+.ifno{
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background: #9F88FF;
+    color: white;
+    cursor: pointer;
+    margin-right: 20px;
+}

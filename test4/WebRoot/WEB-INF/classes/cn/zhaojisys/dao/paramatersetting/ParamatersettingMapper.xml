@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhaojisys.dao.paramatersetting.ParamatersettingMapper">
+	<!-- 查询参数信息 -->
+	<select id="getParamatersettingList" resultType="Paramatersetting">
+		select * from paramatersetting
+	</select>
+	<!-- 更新参数信息 -->
+	<update id="updateListById" parameterType="Paramatersetting">
+		update paramatersetting
+		<trim prefix="set" suffixOverrides="," suffix="where id=1">
+			<if test="minimunWithDrawal != null">minimunWithDrawal=#{minimunWithDrawal},</if>
+			<if test="unitConversion != null">unitConversion=#{unitConversion},</if>
+			<if test="tyreBrand != null">tyreBrand=#{tyreBrand},</if>
+			<if test="typrSpec != null">typrSpec=#{typrSpec},</if>
+			<if test="typrMaterial != null">typrMaterial=#{typrMaterial},</if>
+		</trim>
+	</update>
+	<insert id="addLine">
+		insert into headline(message,createtime) values(#{message},#{createTime})
+	</insert>
+	<select id="chaLine" resultType="headline">
+		select id,message,createtime from headline order by createtime desc Limit 1
+	</select>
+	<select id="getCustomer" resultType="Customer">
+		select *from customer
+		<trim prefix="where" prefixOverrides="and">
+			<if test="name!=null and name!=''">
+				and name like CONCAT ('%',#{name},'%')
+			</if>
+		</trim>
+		order by createTime desc limit #{from},#{pageSize}
+	</select>
+	<select id="getCustomerCount" resultType="Int">
+		select count(1) from customer
+		<trim prefix="where" prefixOverrides="and">
+			<if test="name!=null and name!=''">
+				and name like CONCAT ('%',#{name},'%')
+			</if>
+		</trim>
+	</select>
+</mapper>

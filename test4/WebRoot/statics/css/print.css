@@ -1,0 +1,141 @@
+@charset "utf-8";
+*{
+	padding:0;
+	margin:0;
+	border:0;
+}
+body {
+	font-size: 14px;
+	width:100%;
+	height:auto;
+	font-family: "宋体";
+	color:#333;
+}
+#print {
+	width:1070px;
+	height:auto;
+	overflow:hidden;
+	margin:0 auto;
+	/*background:#aaa;*/
+}
+.prt_head {
+	height:58px;
+	padding: 0 20px;
+}
+.prt_head .ph_logo {
+	float:left;
+	width:262px;
+	height:58px;
+}
+.prt_head .ph_logo img {
+	width:262px;
+	height:58px;
+}
+.prt_head .ph_txm {
+	float:right;
+	width:230px;
+	height:58px;
+}
+.prt_head .ph_txm img {
+	width:230px;
+	height:58px;
+}
+.prt_top {
+	width:100%;
+	height:180px;
+	overflow:hidden;
+}
+.prt_top .prt_t_tit {
+	width:100%;
+	height:58px;
+	line-height:58px;
+	border-bottom:dashed 2px #000;
+	font-size:44px;
+	letter-spacing:0.3em;
+	text-align:center;
+	font-weight:600;
+}
+.prt_top .prt_t_cont {
+	width:100%;
+	height:120px;
+	overflow:hidden;
+	line-height:40px;
+}
+.prt_top .prt_t_cont .ptc_x {
+	float:left;
+	height:40px;
+	overflow:hidden;
+	font-size:20px;
+	font-weight:400;
+}
+.prt_top .prt_t_cont .ptc_x.x_half {width:50%;}
+.prt_top .prt_t_cont .ptc_x.x_one {width:100%;}
+.prt_tab {
+	width:100%;
+	height:315px;
+}
+.prt_tab table.p_table {
+	width:100%;
+	height:315px;
+    border-collapse: collapse;/* 边框合并属性  */
+	text-align:center;
+}
+.prt_tab table.p_table th {
+	border-bottom: 2px solid #666!important;;
+}
+.prt_tab table.p_table th,
+.prt_tab table.p_table td {
+	height:44px;
+	line-height:44px;
+	border: 1px solid #666;
+}
+.prt_tab table.p_table th{
+	font-size:20px;
+	font-weight:600;
+}
+.prt_tab table.p_table td{  
+	font-size:16px;
+}
+.prt_tab table.p_table td.p_name {text-align:left;padding-left:10px;}
+.prt_send,.prt_all {
+	width:100%;
+	height:45px;
+	overflow:hidden;
+}
+.prt_send table.s_table {
+	width:100%;
+	height:45px;
+    border-collapse: collapse;
+	text-align:center;
+}
+.prt_send table.s_table td {
+	height:44px;
+	border: 1px solid #666;
+	border-bottom:none;
+	border-top:none;
+	font-size:16px;
+}
+.prt_send table.s_table td.sed_cont {
+	font-size:12px;
+	text-align:left;
+	padding-left:10px;
+}
+.prt_all table.a_table {
+	width:100%;
+	height:43px;
+    border-collapse: collapse;
+	text-align:left;
+	border: 1px solid #666;
+}
+.prt_all table.a_table td {
+	height:43px;
+	font-size:20px;
+	padding-left:10px;
+}
+.prt_bot {
+	width:100%;
+	height:auto;
+	font-size:18px;
+	line-height:25px;
+	text-align:center;
+}

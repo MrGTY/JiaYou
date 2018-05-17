@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhaojisys.dao.site.SiteMapper">
+	<select id="getExtractApplyByCondition" resultType="ExtractApply">
+		select e.*,ee.userName from extractApply e left join employeinfo ee on e.emplId=ee.id
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="status!=null">
+				and e.status=#{status}
+			</if>
+			<if test="begintime!=null and begintime !=''">
+				and e.applicationTime &gt;= #{begintime}
+			</if>
+			<if test="endtime!=null and endtime !=''">
+				and e.applicationTime &lt;= #{endtime}
+			</if>
+			and e.gsId=#{index}
+		</trim>
+		order by e.applicationTime DESC limit #{from},#{pageSize}
+	</select>
+	<select id="getExtractApplyCount" resultType="Int">
+		select count(1) from extractApply e left join employeinfo ee on e.emplId=ee.id
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="status!=null">
+				and e.status=#{status}
+			</if>
+			<if test="begintime!=null and begintime !=''">
+				and e.applicationTime &gt;= #{begintime}
+			</if>
+			<if test="endtime!=null and endtime !=''">
+				and e.applicationTime &lt;= #{endtime}
+			</if>
+			and e.gsId=#{index}
+		</trim>
+	</select>
+	<select id="getOilrecordByCondition" resultMap="Oilrecord666">
+		select o.*,v.phoneNum,v.userName,v.busNum,v.mycarId from oilrecord o left join vipuserinfo v on o.vipUserId=v.id
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="begintime!=null and begintime !=''">
+				and o.operationTime &gt;= #{begintime}
+			</if>
+			<if test="endtime!=null and endtime !=''">
+				and o.operationTime &lt;= #{endtime}
+			</if>
+			<if test="status==1">
+				and o.expenditure=0
+			</if>
+			and o.gsId=#{gsId} and o.infotype=2
+		</trim>
+	<!-- 	<choose>
+			<when test="status==1">
+				and o.expenditure=0
+			</when>
+			<when test="status==2">
+				and o.income=0
+			</when>
+		</choose>  -->
+		order by o.operationTime DESC limit #{from},#{pageSize}
+	</select>
+	<resultMap type="Oilrecord" id="Oilrecord666">
+		<id property="id" column="id"/>
+		<result property="operationTime" column="operationTime"/>
+		<result property="income" column="income"/>
+		<result property="expenditure" column="expenditure"/>
+		<result property="balance" column="balance"/>
+		<result property="fee" column="fee"/>
+		<result property="remaining" column="remaining"/>
+		<association property="vipuserinfo" javaType="Vipuserinfo" resultMap="Vipuserinfo666"></association>
+	</resultMap>
+	<resultMap type="Vipuserinfo" id="Vipuserinfo666">
+		<id property="id" column="id"/>
+		<result property="phoneNum" column="phoneNum"/>
+		<result property="vipName" column="vipName"/>
+		<result property="userName" column="userName"/>
+		<result property="busNum" column="busNum"/>
+		<result property="mycarId" column="mycarId"/>
+	</resultMap>
+	<select id="getOilrecordByCount" resultType="Int">
+		select count(1) from oilrecord o left join vipuserinfo v on o.vipUserId=v.id
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="begintime!=null and begintime !=''">
+				and o.operationTime &gt;= #{begintime}
+			</if>
+			<if test="endtime!=null and endtime !=''">
+				and o.operationTime &lt;= #{endtime}
+			</if>
+			<if test="status==1">
+				and o.expenditure=0
+			</if>
+			and o.gsId=#{gsId} and o.infotype=2
+		</trim>
+		<!-- <choose>
+			<when test="status==1">
+				and o.expenditure=0
+			</when>
+			<when test="status==2">
+				and o.income=0
+			</when>
+		</choose>  -->
+	</select>
+	<select id="getTyredatailsByCondition" resultMap="Tyredatails666">
+		select o.*,v.phoneNum,v.userName,v.busNum from tyredatails o left join vipuserinfo v on o.vipUserId=v.id
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="begintime!=null and begintime !=''">
+				and o.operationData &gt;= #{begintime}
+			</if>
+			<if test="endtime!=null and endtime !=''">
+				and o.operationData &lt;= #{endtime}
+			</if>
+			<if test="status==1">
+				and o.expenditure=0
+			</if>
+			and o.zdid=#{gsId} and o.infotype=2
+		</trim>
+		order by o.operationData DESC limit #{from},#{pageSize}
+	</select>
+	<resultMap type="Tyredatails" id="Tyredatails666">
+		<id property="id" column="id"/>
+		<result property="operationData" column="operationData"/>
+		<result property="income" column="income"/>
+		<result property="expenditure" column="expenditure"/>
+		<result property="balance" column="balance"/>
+		<association property="vipuserinfo" javaType="Vipuserinfo" resultMap="Vipuserinfo666"></association>
+	</resultMap>
+	<select id="getTyredatailsByCount" resultType="Int">
+		select count(1) from tyredatails o left join vipuserinfo v on o.vipUserId=v.id
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="begintime!=null and begintime !=''">
+				and o.operationData &gt;= #{begintime}
+			</if>
+			<if test="endtime!=null and endtime !=''">
+				and o.operationData &lt;= #{endtime}
+			</if>
+			<if test="status==1">
+				and o.expenditure=0
+			</if>
+			and o.zdid=#{gsId} and o.infotype=2
+		</trim>
+	</select>
+	<!-- 服务费 -->
+	<select id="getFeetable" resultType="Feetable">
+		select *from feetable f
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="begintime!=null and begintime !=''">
+				and f.createtime &gt;= #{begintime}
+			</if>
+			<if test="endtime!=null and endtime !=''">
+				and f.createtime &lt;= #{endtime}
+			</if>
+			and f.gassid=#{gassid}
+		</trim> 
+		order by f.createtime DESC limit #{from},#{pageSize}
+	</select>
+	<select id="getFeetableCount" resultType="Int">
+		select count(1) from feetable f
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="begintime!=null and begintime !=''">
+				and f.createtime &gt;= #{begintime}
+			</if>
+			<if test="endtime!=null and endtime !=''">
+				and f.createtime &lt;= #{endtime}
+			</if>
+			and f.gassid=#{gassid}
+		</trim> 
+	</select>
+	<!-- 算未结算额度 -->
+	<select id="getFeeAll" resultType="Double">
+		select sum(fee) from oilrecord where gsId=#{gassid} and balance=0 and expenditure=0
+	</select>
+	<select id="getOilAll" resultType="int">
+		select sum(income) from oilrecord where gsId=#{gassid} and infotype=2
+	</select>
+	<!-- 服务费对应的燃油收支记录 -->
+	<select id="getOilrecordByFee" resultMap="Oilrecord666">
+		select o.*,v.userName,v.busNum from oilrecord o left join vipuserinfo v on o.vipUserId=v.id
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="begintime!=null and begintime !=''">
+				and o.operationTime &gt;= #{begintime}
+			</if>
+			<if test="endtime!=null and endtime !=''">
+				and o.operationTime &lt;= #{endtime}
+			</if>
+			and o.gsId=#{gsId} and o.balance=1 and o.id in 
+			<foreach collection="idc" item="idc" 
+  			open="(" separator="," close=")">
+  				#{idc}
+  			</foreach>
+	
+		</trim>
+		order by o.operationTime DESC limit #{from},#{pageSize}
+	</select>
+	<select id="getOilrecordCountByFee" resultType="Int">
+		select count(1) from oilrecord o left join vipuserinfo v on o.vipUserId=v.id
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="begintime!=null and begintime !=''">
+				and o.operationTime &gt;= #{begintime}
+			</if>
+			<if test="endtime!=null and endtime !=''">
+				and o.operationTime &lt;= #{endtime}
+			</if>
+			and o.gsId=#{gsId} and o.balance=1 and o.id in 
+			<foreach collection="idc" item="idc" 
+  			open="(" separator="," close=")">
+  				#{idc}
+  			</foreach>
+		</trim>
+	</select>
+</mapper>

@@ -1,0 +1,262 @@
+
+.wrap {
+    width: 100%;
+}
+
+.basis_data {
+    margin-left: 10px;
+    font-size: 14px;
+    margin-bottom: 50px;
+    float: left;
+    width: 780px;
+}
+
+.basis_data div > span:nth-of-type(1) {
+    display: inline-block;
+    width: 110px;
+    text-align: right;
+}
+
+.basis_data div span > span:first-of-type {
+    color: red;
+}
+
+.basis_data1,
+.basis_data2,
+.basis_data3,
+.basis_data4,
+.basis_data5,
+.basis_data6,
+.basis_data7,
+.basis_data8,
+.basis_data9,
+.basis_data10,
+.basis_data11,
+.basis_data12,
+.basis_data13,
+.basis_data14,
+.basis_data15,
+.basis_data16 {
+    margin-bottom: 25px;
+}
+
+.basis_data .basis_data1 {
+    color: #B088FF;
+    font-size: 18px;
+    margin-top: 35px;
+}
+
+.basis_data .basis_data2 {
+    height: 35px;
+    line-height: 35px;
+}
+
+.basis_data .basis_data2 > span:nth-of-type(2) {
+    display: inline-block;
+    width: 465px;
+    border: 1px #CCBBFF solid;
+}
+
+.basis_data .basis_data2 input {
+    height: 35px;
+    line-height: 35px;
+    width: 450px;
+    outline: none;
+    border: 0;
+}
+
+.basis_data .basis_data3 select {
+    height: 35px;
+    line-height: 35px;
+    width: 105px;
+    margin-right: 20px;
+    background: none;
+    outline: none;
+    border: 1px #CCBBFF solid;
+}
+
+.basis_data .basis_data4 input {
+    height: 35px;
+    line-height: 35px;
+    width: 450px;
+}
+
+.basis_data .basis_data5 input {
+    width: 280px;
+    height: 35px;
+    line-height: 35px;
+    border: 1px #CCBBFF solid;
+    background: none;
+    outline: none;
+}
+
+.basis_data .basis_data5 input:nth-of-type(1) {
+    margin-right: 20px;
+}
+
+.basis_data .basis_data6 input {
+    width: 250px;
+    height: 35px;
+    line-height: 35px;
+    background: none;
+    outline: none;
+    border: 0;
+}
+
+.basis_data .basis_data6 > span:nth-of-type(2) {
+    display: inline-block;
+    width: 280px;
+    height: 35px;
+    line-height: 35px;
+    border: 1px #CCBBFF solid;
+    background: none;
+    outline: none;
+}
+
+.basis_data .basis_data7 input {
+    width: 280px;
+    height: 35px;
+    line-height: 35px;
+    border: 1px #CCBBFF solid;
+    background: none;
+    outline: none;
+}
+
+.basis_data .basis_data7 input:nth-of-type(1) {
+    margin-right: 20px;
+}
+
+.basis_data .basis_data8 > span:nth-of-type(2) {
+    display: inline-block;
+    width: 280px;
+    height: 35px;
+    line-height: 35px;
+    border: 1px #CCBBFF solid;
+}
+
+.basis_data .basis_data8 input {
+    background: none;
+    outline: none;
+    border: 0;
+}
+
+.basis_data .basis_data9 > span:nth-of-type(1) {
+    position: relative;
+    top: -50px;
+}
+
+.basis_data .basis_data9 textarea {
+    height: 80px;
+    width: 400px;
+    resize: none;
+    border: 1px #CCBBFF solid;
+    background: none;
+    outline: none;
+}
+
+.basis_data10 {
+    color: #B088FF;
+    font-size: 18px;
+    margin-top: 35px;
+}
+
+.basis_data11 input, .basis_data12 input {
+    width: 280px;
+    height: 35px;
+    line-height: 35px;
+    border: 1px #CCBBFF solid;
+    background: none;
+    outline: none;
+}
+
+.basis_data13 > span:nth-of-type(2) {
+    width: 280px;
+    height: 20px;
+    text-align: center;
+    display: inline-block;
+    background-color: #DDDDDD;
+}
+
+.basis_data13 > span:nth-of-type(2) > span:nth-of-type(2) {
+    width: 61px;
+    border-right: 1px white solid;
+    display: inline-block;
+    margin-left: -10px;
+}
+
+.basis_data13 > span:nth-of-type(2) > span:nth-of-type(3) {
+    width: 61px;
+    border-right: 1px white solid;
+    display: inline-block;
+}
+
+.basis_data13 > span:nth-of-type(2) > span:nth-of-type(4) {
+    width: 61px;
+    display: inline-block;
+}
+
+.basis_data11 input, .basis_data14 input {
+    width: 280px;
+    height: 35px;
+    line-height: 35px;
+    border: 1px #CCBBFF solid;
+    background: none;
+    outline: none;
+}
+
+.basis_data11 input, .basis_data15 label:nth-of-type(1) {
+    margin-right: 90px;
+}
+
+.basis_data16 {
+    margin-left: 40px;
+}
+
+.basis_data16 input {
+    text-align: center;
+    width: 140px;
+    height: 40px;
+    line-height: 40px;
+    outline: none;
+    border: 0;
+    background-color: #D1BBFF;
+}
+
+.basis_data16 input:nth-of-type(1) {
+    margin-right: 20px;
+}
+/*二维码*/
+.merchants{
+    float: left;
+    width: 260px;
+    margin-top: 25px;
+}
+.merchants .merchants_wrap{
+    width: 250px;
+    height: 165px;
+    line-height: 165px;
+}
+.merchants .merchants_wrap .code{
+    width: 160px;
+    height: 160px;
+    float: left;
+    border: 1px #D1BBFF solid;
+    border-radius: 3px;
+}
+.merchants .merchants_wrap .lianjie{
+    margin-left: 10px;
+    float: left;
+}
+.merchants .merchants_wrap .lianjie>a{
+    width: 70px;
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    background-color: #D1BBFF;
+    display: block;
+}
+.merchants .merchants_name{
+    font-size: 20px;
+    margin-bottom: 10px;
+}

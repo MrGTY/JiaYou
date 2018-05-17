@@ -1,0 +1,13 @@
+eclipse.preferences.version=1
+encoding//WebRoot/WEB-INF/jsp/tireadd.jsp=UTF-8
+encoding//src/cn/zhaojisys/dao/applymapper/ApplyMapper.java=UTF-8
+encoding//src/cn/zhaojisys/dao/employe/EmployeMapper.java=UTF-8
+encoding//src/cn/zhaojisys/dao/employe/EmployeMapper.xml=UTF-8
+encoding//src/cn/zhaojisys/pojo/AppVersion.java=UTF-8
+encoding//src/cn/zhaojisys/pojo/EmployeInfo.java=UTF-8
+encoding//src/cn/zhaojisys/pojo/ExtractApply.java=UTF-8
+encoding//src/cn/zhaojisys/pojo/Gasstation.java=UTF-8
+encoding//src/cn/zhaojisys/pojo/Paramatersetting.java=UTF-8
+encoding//src/cn/zhaojisys/tools/Constants.java=UTF-8
+encoding//src/cn/zhaojisys/tools/app/sendsms.java=UTF-8
+encoding/<project>=UTF-8

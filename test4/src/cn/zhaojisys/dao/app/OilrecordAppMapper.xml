@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zhaojisys.dao.app.OilrecordAppMapper">
+    <select id="listOilrecordBy_gsId" parameterType="int" resultType="OilModel">
+    	SELECT o.operationTime, o.income,v.busNum,v.phoneNum FROM oilrecord o
+		INNER  JOIN vipuserinfo v ON v.id=o.vipUserId
+		WHERE o.gsId=#{gsId} and o.infotype=2
+		order by o.operationTime desc
+		limit 10
+    </select>
+    <select id="countOilrecordBy_gsId" parameterType="int" resultType="int">
+    	SELECT count(1) FROM oilrecord o
+		LEFT JOIN gasstation g ON g.id=o.friendid
+		WHERE o.vipUserId=#{vipUserId} and o.infotype=2
+    </select>
+	
+</mapper>

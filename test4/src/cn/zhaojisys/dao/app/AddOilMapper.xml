@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zhaojisys.dao.app.AddOilMapper">
+    <update id="vipAddoil">
+    	update vipuserinfo
+    	 set oilMass=#{oilMass}
+    	where id=#{id}
+    </update>
+	<insert id="addOilHistory" parameterType="Oilrecord">
+		insert into oilrecord 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gsId!=-20">gsId,</if>
+			<if test="operationTime!=null">operationTime,</if>
+			<if test="vipUserId!=-20">vipUserId,</if>
+			<if test="income!=-20">income,</if>
+			<if test="expenditure!=-20">expenditure,</if>
+			<if test="remaining!=-20">remaining,</if>
+			<if test="operationType!=-20">operationType,</if>
+			<if test="friendId!=null">friendId,</if>
+			<if test="infotype!=null">infotype,</if>
+			<if test="fee!=null">fee,</if>
+			<if test="balance!=null">balance,</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gsId!=-20">#{gsId},</if>
+			<if test="operationTime!=null">#{operationTime},</if>
+			<if test="vipUserId!=-20">#{vipUserId},</if>
+			<if test="income!=-20">#{income},</if>
+			<if test="expenditure!=-20">#{expenditure},</if>
+			<if test="remaining!=-20">#{remaining},</if>
+			<if test="operationType!=-20">#{operationType},</if>
+			<if test="friendId!=null">#{friendId},</if>
+			<if test="infotype!=null">#{infotype},</if>
+			<if test="fee!=null">#{fee},</if>
+			<if test="balance!=null">#{balance},</if>
+		</trim>
+	</insert>
+	<!-- 查询会员信息 -->
+	<select id="getVipinfo" resultType="Vipuserinfo">
+		SELECT id,vipName,oilMass,userName,busNum,tyreBalance FROM vipuserinfo where id =#{vid}
+	</select>
+	<!-- 查询站点信息 -->
+	<select id="getGassinfo" resultType="Gasstation">
+		SELECT 	id,siteName,contact,mobilePhone,status,logicId FROM gasstation where id=#{gid}
+	</select>
+	<select id="lastMaxBuyshopBy_Id" resultType="Oilrecord" parameterType="int">
+		select MAX(operationTime) operationTime ,friendId FROM oilrecord
+WHERE vipUserId=#{vipUserId} and operationType=2
+
+
+	</select>
+</mapper>

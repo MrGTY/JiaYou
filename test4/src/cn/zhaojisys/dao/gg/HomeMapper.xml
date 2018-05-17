@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhaojisys.dao.gg.HomeMapper">
+	<select id="completeQuantity" resultType="string">
+		SELECT SUM(income) AS
+		income FROM oilrecord WHERE
+		DATE_FORMAT(operationTime,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND
+		infotype=2
+	</select>
+
+	<select id="tiresMoney" resultType="string">
+		SELECT SUM(income) AS income
+		FROM tyredatails WHERE
+		DATE_FORMAT(operationData,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND
+		infotype=2
+	</select>
+	<select id="oilExtraction" resultType="string">
+		SELECT SUM(amountDrawn) AS
+		amountDrawn FROM extractapply WHERE
+		DATE_FORMAT(approveData,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND
+		STATUS=1 AND businessType=0
+	</select>
+	<select id="extract" resultType="string">
+		SELECT SUM(amountDrawn) AS
+		amountDrawn FROM extractapply WHERE
+		DATE_FORMAT(approveData,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND
+		STATUS=1 AND businessType=1
+	</select>
+	<select id="fuelSite" resultType="string">
+		SELECT COUNT(1) FROM
+		`gasstation` WHERE
+		DATE_FORMAT(creatData,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND gsType=0
+		AND logicId=1
+	</select>
+	<select id="tyreSite" resultType="string">
+		SELECT COUNT(1) FROM
+		`gasstation` WHERE
+		DATE_FORMAT(creatData,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND gsType=1
+		AND logicId=1
+	</select>
+	<select id="newAddVip" resultType="string">
+		SELECT COUNT(1) FROM
+		`vipuserinfo` WHERE
+		DATE_FORMAT(createTime,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND
+		deleteTag=1
+	</select>
+	<select id="czTotal" resultType="string">
+		SELECT SUM(income) FROM
+		oilrecord WHERE operationType=0
+	</select>
+	<select id="comTotal" resultType="string">
+		SELECT SUM(income) AS income
+		FROM oilrecord WHERE infotype=2
+	</select>
+	<select id="tqTotal" resultType="string">
+		SELECT SUM(amountDrawn) AS
+		amountDrawn FROM extractapply WHERE
+		businessType=0 AND STATUS=1
+	</select>
+	<select id="wtqTotal" resultType="string">
+		SELECT SUM(quota) AS quota FROM
+		gasstation WHERE logicId=1 AND gsType =0
+	</select>
+	<select id="dtqTotal" resultType="string">
+		SELECT SUM(amountDrawn) AS
+		amountDrawn FROM extractapply WHERE
+		businessType=0 AND STATUS=0
+	</select>
+	<select id="serviceTotal" resultType="string">
+		SELECT COUNT(1) FROM
+		`gasstation` WHERE logicId=1 AND gsType =0
+	</select>
+	<select id="vipTotal" resultType="string">
+		SELECT COUNT(1) FROM
+		`vipuserinfo` WHERE deleteTag=1
+	</select>
+	<select id="logisticCompany" resultType="string">
+		SELECT COUNT(1) FROM
+		`vipuserinfo` WHERE deleteTag=1 AND usertype =0
+	</select>
+	<select id="persinoal" resultType="string">
+		SELECT COUNT(1) FROM
+		`vipuserinfo` WHERE deleteTag=1 AND usertype =1
+	</select>
+	<select id="ltMoney" resultType="string">
+		SELECT SUM(income) AS income
+		FROM `tyredatails` WHERE infotype=2
+	</select>
+	<select id="lttqMoney" resultType="string">
+		SELECT SUM(amountDrawn) AS
+		amountDrawn FROM extractapply WHERE businessType=1 AND STATUS=1
+	</select>
+	<select id="ltdtqMoney" resultType="string">
+		SELECT SUM(quota) AS quota
+		FROM gasstation WHERE logicId=1 AND gsType =1
+	</select>
+	<select id="ltzdNum" resultType="string">
+		SELECT COUNT(1) FROM
+		`gasstation` WHERE logicId=1 AND gsType =1
+	</select>
+
+
+
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zhaojisys.dao.app.RelationShipList">
+<!--消息查询接口  -->
+ <select id="findMsg"  resultType="Messages">
+		select msgType, content,operationTime from message
+		<trim prefix="where" prefixOverrides="and || or">
+			<if test="vipId !=-1">
+			and vipId=#{vipId}
+			</if>
+			<if test="msgType !=-1">
+			and msgType=#{msgType}
+			</if>
+		</trim>
+		 ORDER BY operationTime DESC limit #{pageNo},10		
+</select> 
+<!--好友检索功能接口  -->
+<select id="relaShipList" resultType="Vipuserinfo">
+		select id,phoneNum,userName,busNum from vipuserinfo
+		where
+		phoneNum=#{phoneNum}		
+</select>
+<!--  我的好友列表接口 -->
+<select id="friendList" resultType="Vipuserinfo">
+		select id,phoneNum,userName,busNum from vipuserinfo
+		where id IN(
+		select vipId from relationship where vId=#{id})			
+</select>
+<!--  添加好友接口 -->
+<insert id="addFriend">
+		insert into relationship (vId,vipId)
+		values(#{vId},#{vipId})				
+</insert>
+<!--  删除好友接口  -->
+<delete id="breakFriend">
+		delete from relationship where vId=#{vId} and vipId=#{vipId}				
+</delete>
+ <!--  查询会员信息接口  -->
+<select id="vipInfoList" resultType="Vipuserinfo">
+		select id,userName,phoneNum,oilMass,busNum,stateTag from vipuserinfo
+		where
+		id=#{id}		
+</select>
+ <!--  油量分配接口  -->
+<update id="giveOil">
+	update vipuserinfo set oilMass=#{OilQuantity} where id=#{ChooseId} 
+</update>
+<!--  查询燃油记录表前十分钟是否有交易记录接口 -->
+<select id="isExistRecord" resultType="oilrecord" parameterType="int">
+	select max(operationTime)as operationTime ,vipUserId from oilrecord where vipUserId=#{id} and operationType=1 
+</select>
+
+<!--  分配油量往消息表中添加两条记录 -->
+<insert id="giveOilRecordMessage">
+		insert into message (msgType,content,operationTime,vipId)
+		values(#{msgType},#{content},#{operationTime},#{vipId})				
+</insert>
+<!-- 分配油量往燃油记录表中添加两条记录  -->
+<insert id="giveOilRecord">
+		insert into oilrecord (gsId,operationTime,vipUserId,income,expenditure,remaining,operationType,friendId)
+		values(#{gsId},#{operationTime},#{vipUserId},#{income},#{expenditure},#{remaining},#{operationType},#{friendId})				
+</insert>
+
+<resultMap type="Vipuserinfo" id="Vipuserinforesult">
+		<id property="id" column="id"/>
+		<result property="vipName" column="vipName"/>
+		<result property="qkBalance" column="qkBalance"/>
+	</resultMap>
+	<resultMap type="Gasstation" id="Gasstationresult">
+		<id property="id" column="id"/>
+		<result property="siteName" column="siteName"/>
+		<result property="mobilePhone" column="MobilePhone"/>
+	</resultMap>
+	<resultMap type="oilrecord" id="Oilrecordresult">
+		<result property="operationTime" column="operationTime"/>
+		<result property="operationType" column="operationType"/>
+		<result property="friendId" column="friendId"/>
+		<result property="gsId" column="gsId"/>
+		<result property="income" column="income"/>
+		<result property="upoiltype" column="upoiltype"/>
+		<result property="expenditure" column="expenditure"/>
+		<result property="remaining" column="remaining"/>
+		<result property="vipUserId" column="vipUserId"/>
+		<association property="vipuserinfo" javaType="Vipuserinfo" resultMap="Vipuserinforesult"/>
+		<association property="gasstation" javaType="Gasstation" resultMap="Gasstationresult"></association>
+	</resultMap>
+	<select id="saleRecord" resultMap="Oilrecordresult">
+		SELECT o.income,o.remaining,o.operationTime,o.expenditure,o.gsId,o.operationType,o.friendid,g.siteName,o.gsId,o.friendId
+		FROM vipuserinfo v,oilrecord o LEFT JOIN gasstation g ON o.gsId=g.id WHERE v.id=o.vipUserId and v.deleteTag=1 and o.infotype=1
+		<trim>
+			<if test="vipUserId!=0">
+				and o.vipUserId=#{vipUserId}
+			</if>
+		</trim>    
+		  GROUP BY o.id  order by o.operationTime DESC limit 10
+	</select>
+<!--查询好友关系是否已存在  -->
+<select id="isExistRelationShip" resultType="RelationShip">
+	select * from relationship where vId=#{vId} and vipId=#{vipId}
+</select>
+
+
+</mapper>

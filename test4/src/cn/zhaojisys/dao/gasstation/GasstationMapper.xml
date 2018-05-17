@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhaojisys.dao.gasstation.GasstationMapper">
+	<resultMap type="Gasstation" id="Gasstation2">
+		<id property="id" column="id"/>
+		<result property="siteName" column="siteName"/>
+		<result property="province" column="province"/>
+		<result property="city" column="city"/>
+		<result property="county" column="county"/>
+		<result property="detaileAddress" column="detaileAddress"/>
+		<result property="longitude" column="longitude"/>
+		<result property="latitude" column="latitude"/>
+		<result property="coverRadius" column="coverRadius"/>
+		<result property="contact" column="contact"/>
+		<result property="mobilePhone" column="mobilePhone"/>
+		<result property="quota" column="quota"/>
+		<result property="status" column="status"/>
+		<result property="tyreBrand" column="tyreBrand"/>
+		<result property="typrMaterial" column="typrMaterial"/>
+		<result property="typrSpec" column="typrSpec"/>
+		<result property="qrCodeImg" column="qrCodeImg"/>
+		<association property="Oilrecord" javaType="Oilrecord" resultMap="Oilrecord666"></association>
+	</resultMap>
+	<resultMap type="Oilrecord" id="Oilrecord666">
+		<id property="id" column="id"/>
+		<result property="income" column="income"/>
+	</resultMap>
+	<select id="getGasstationListByCondition" resultType="Gasstation">
+			SELECT SUM(o.income) as zong,g.* FROM gasstation g LEFT JOIN oilrecord o 
+			ON g.id=o.gsId AND o.infotype=2  where g.logicId=1  
+		<trim>
+			<if test="siteName!=null and siteName!=''">
+				and g.siteName like CONCAT ('%',#{siteName},'%')
+			</if>
+			<if test="contact!=null and contact!=''">
+				and g.contact like CONCAT ('%',#{contact},'%')
+			</if>
+			<if test="status!=null">
+				and g.status=#{status}
+			</if>
+			<if test="gsType!=null">
+				and g.gsType=#{gsType}
+			</if>
+			GROUP BY g.id order by g.creatData DESC limit #{from},#{pageSize}
+		</trim>
+	</select>
+	<select id="getGasstationCount" resultType="Int">
+		select count(1) from gasstation where logicId=1 
+		<trim>
+			<if test="siteName!=null and siteName!=''">
+				and siteName like CONCAT ('%',#{siteName},'%')
+			</if>
+			<if test="contact!=null and contact!=''">
+				and contact like CONCAT ('%',#{contact},'%')
+			</if>
+			<if test="gsType!=null">
+				and gsType=#{gsType}
+			</if>
+			<if test="status!=null">
+				and status=#{status}
+			</if>
+		</trim>
+	</select>
+	<update id="deleteById">
+		update gasstation set logicId=0 where id=#{id}
+	</update>
+	<update id="updateStatusById">
+		update gasstation set status=#{status} where id=#{id}
+	</update>
+	<select id="getGasstationById" resultType="Gasstation">
+		select *from gasstation where id=#{id}
+	</select>
+	<select id="getParamatersettingList" resultType="Paramatersetting">
+		select *from paramatersetting limit 0,1
+	</select>
+	<select id="getStatusById" resultType="Int">
+		select count(1) from gasstation where status=1 and id=#{id} 
+	</select>
+	<select id="getExtractApplyStatusById" resultType="Int">
+		select count(1) from extractapply where status=0 and gsId=#{id}
+	</select>
+	<insert id="addExtractApply" parameterType="extractapply">
+		insert into extractapply(businessType,amountDrawn,surplusBalance,telePhone,applicationTime,note,applyUserId,gsId,status) 
+		values(#{businessType},#{amountDrawn},#{surplusBalance},#{telePhone},#{applicationTime},#{note},#{applyUserId},#{gsId},#{status})
+	</insert>
+	<select id="getGasstationCode" resultType="Int">
+		select count(1) from gasstation where mobilePhone=#{code}
+	</select>
+	<insert id="addGasstation" parameterType="Gasstation">
+		insert into gasstation(siteName,code,password,province,city,county,detaileAddress,
+		contact,mobilePhone,initialOil,description,qrCodeImg,coverRadius,longitude,latitude
+		,status,gsType,tyreBrand,typrSpec,typrMaterial,quota,creatData,logicId,charge) values(#{siteName},#{code},
+		#{password},#{province},#{city},#{county},#{detaileAddress},#{contact},#{mobilePhone},
+		#{initialOil},#{description},#{qrCodeImg},#{coverRadius},#{longitude},#{latitude},
+		#{status},#{gsType},#{tyreBrand},#{typrSpec},#{typrMaterial},#{quota},#{creatData},#{logicId},#{charge})
+	</insert>
+	<update id="modifyGasstation" parameterType="Gasstation">
+		update gasstation
+			<trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+			<if test="siteName != null">siteName=#{siteName},</if>
+			<if test="code != null">code=#{code},</if>
+			<if test="password != null">password=#{password},</if>
+			<if test="province != null">province=#{province},</if>
+			<if test="city != null">city=#{city},</if>
+			<if test="county != null">county=#{county},</if>
+			<if test="detaileAddress != null">detaileAddress=#{detaileAddress},</if>
+			<if test="contact != null">contact=#{contact},</if>
+			<if test="mobilePhone != null">mobilePhone=#{mobilePhone},</if>
+			<if test="initialOil != null">initialOil=#{initialOil},</if>
+			<if test="description != null">description=#{description},</if>
+			<if test="qrCodeImg != null">qrCodeImg=#{qrCodeImg},</if>
+			<if test="coverRadius != null">coverRadius=#{coverRadius},</if>
+			<if test="longitude != null">longitude=#{longitude},</if>
+			<if test="latitude != null">latitude=#{latitude},</if>
+			<if test="status != null">status=#{status},</if>
+			<if test="gsType != null">gsType=#{gsType},</if>
+			<if test="typrSpec != null">typrSpec=#{typrSpec},</if>
+			<if test="typrMaterial != null">typrMaterial=#{typrMaterial},</if>			
+			<if test="tyreBrand != null">tyreBrand=#{tyreBrand},</if>
+			<if test="quota != null">quota=#{quota},</if>
+			<if test="creatData != null">creatData=#{creatData},</if>
+			<if test="logicId != null">logicId=#{logicId},</if>
+			<if test="charge != null">charge=#{charge},</if>
+		</trim>
+	</update>
+	<update id="updateGasstationQRcode">
+		update gasstation set qrCodeImg=#{qrcode} where id=#{id}
+	</update>
+	<select id="getGasstationByMoney" resultType="Gasstation">
+		select *from gasstation where creatData=#{creatData} and siteName=#{siteName}
+	</select>
+	<insert id="addOilrecord" parameterType="Oilrecord">
+		insert into oilrecord(gsId,operationTime,vipUserId,income,expenditure,remaining,operationType,friendId
+		<if test="infotype!=null">
+			,infotype
+		</if>
+		,balance,fee) 
+		values(#{gsId},#{operationTime},#{vipUserId},#{income},#{expenditure},#{remaining},#{operationType},#{friendId}
+		<if test="infotype!=null">
+			,#{infotype}
+		</if>
+		,#{balance},#{fee})
+	</insert>
+	<update id="updateGasstationQuota">
+		update gasstation set quota=#{quota} where id=#{id}
+	</update>
+	<insert id="addMessages" parameterType="Messages">
+		insert into message(msgType,content,operationTime,vipId,gsId) values(#{msgType},#{content},#{operationTime},#{vipId},#{gsId})
+	</insert>
+</mapper>

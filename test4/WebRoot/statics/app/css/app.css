@@ -1,0 +1,65 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*登录*/
+.logoimg{
+	width:70%;
+	margin:3rem auto;
+	text-align:center;
+}
+.logotable li .border-r{
+	width:100%;
+	height:3.5rem;
+	line-height:3.5rem;
+	border-radius:1rem;
+	background:#f2f2f5;
+	margin-top:2rem;
+	padding:0 1rem;
+	border:solid 1px #F00;
+}
+.logotable li .border-s{
+	width:70%;
+}
+.tst{
+	height:3.5rem; 
+	line-height:3.5rem;
+	margin-top:2rem;
+}
+.tst a{ text-decoration:underline;}
+input, textarea {
+	color:#696969;
+    resize: none;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    display: inline-block !important;
+}
+.comp_input{
+	background: transparent;
+    border: 0;
+	width:60%;
+    padding: 5px !important;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+}
+.comp_input_class{
+	background: transparent;
+	border: 0;
+	width:55%;
+	padding: 5px !important;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+}
+.OKbtn{
+	width:100%;
+	color:#fff;
+	font-size:1.8rem;
+	padding:1rem 0;
+	border-radius:1rem;
+	background:#27a1f7;
+	cursor:pointer;
+}
+
+.logoa{ text-align:center; margin-top:3.5rem;}
+.logoa i{ margin:0 1rem; color:#3498db;}

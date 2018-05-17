@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zhaojisys.dao.app.ApppMapper">
+	<!-- 账号密码登录接口 -->
+	<select id="login" resultType="Vipuserinfo">
+		SELECT * FROM vipuserinfo WHERE deleteTag=1 and  phoneNum=#{phoneNum} AND password=#{password}
+	</select>
+	<!-- 查询帐号密码登录类型 -->
+	<select id="loginType" resultType="gasstation">
+		SELECT * FROM gasstation  WHERE logicId=1 and code=#{code} AND password=#{password}
+	</select>
+	<!-- 短信验证码登录接口 -->
+	<select id="loginphone" resultType="Vipuserinfo">
+		select * from vipuserinfo where deleteTag=1 and  phoneNum=#{phoneNum}
+	</select>
+	<!-- 查询短信验证码登录类型 -->
+	<select id="loginType2" resultType="gasstation">
+		SELECT * FROM gasstation  WHERE logicId=1 and mobilePhone=#{mobilePhone}
+	</select>
+	<!-- 交易信息接口 -->
+	<resultMap type="oilrecord" id="OilrecordResult">
+		<id property="id" column="id"/>
+		<result property="gsId" column="gsId"/>
+		<result property="operationTime" column="operationTime"/>
+		<result property="vipUserId" column="vipUserId"/>
+		<result property="income" column="income"/>
+		<result property="expenditure" column="expenditure"/>
+		<result property="remaining" column="remaining"/>
+		<result property="sumIncome" column="sumIncome"/>
+		<result property="sumExpenditure" column="sumExpenditure"/>
+		<result property="opDate" column="opDate"/>
+		<result property="monthDate" column="monthDate"/>
+		<result property="friendId" column="friendId"/>
+		<result property="paymentType" column="paymentType"/>
+		<result property="operationType" column="operationType"/>
+		<result property="fee" column="fee"/>
+		<association property="gasstation" javaType="gasstation"
+			resultMap="gasstationResult"/>
+		<association property="vipuserinfo" javaType="vipuserinfo"
+			resultMap="vipuserinfoResult"/>
+	</resultMap>
+	<resultMap type="vipuserinfo" id="vipuserinfoResult">
+		<id property="id" column="id"/>
+		<result property="busNum" column="busNum"/>
+	</resultMap>
+	<resultMap type="gasstation" id="gasstationResult">
+		<id property="id" column="id"/>
+		<result property="siteName" column="siteName"/>
+	</resultMap>
+	<select id="Information" resultMap="OilrecordResult">
+		select  o.*,v.busNum,g.siteName from oilrecord o left join vipuserinfo v on
+		 v.id=o.vipUserId left join gasstation g on o.gsId=g.id
+		 WHERE infotype=1 and o.vipUserId=#{id} order by operationTime desc limit 3
+	</select>
+	
+	
+	<!-- 版本查询接口 -->
+	<select id="Version" resultType="AppVersion">
+		select * from appversion where id=MAX(id)
+	</select>
+	
+	<!-- 注册接口 -->
+	<insert id="addVipuserinfo">
+		insert into vipuserinfo (`vipName`,`userName`,`phoneNum`,`password`,`busNum`,`createTime`,uploadImg)
+		values (#{vipName},#{userName},#{phoneNum},#{password},#{busNum},#{createTime},#{uploadImg})
+	</insert>
+	
+	<!-- 首页 -->
+ 	<select id="HomePage" resultType="Vipuserinfo">
+		select phoneNum,oilMass from vipuserinfo where id=#{id}
+	</select>
+	
+	<!-- 我的账户 -->
+	<select id="uName" resultType="Vipuserinfo">
+		select vipName,userName,phoneNum,busNum,userType,mycarId from vipuserinfo where id=#{id}
+	</select>
+	<!-- 个人中心我的账户 -->
+	<select id="geren" resultType="Vipuserinfo">
+		select phoneNum,oilMass,tyreBalance,mycarId from `vipuserinfo` where id=#{id}
+	</select>
+	<!-- 个人中心物流车辆 -->
+	<select id="gerencheliang" resultType="int">
+		SELECT COUNT(1) FROM vipuserinfo WHERE logicId=#{id}
+	</select>
+	<!-- 个人中心我的车辆 -->
+	<select id="vipCheLiang" resultType="int">
+		select userType FROM vipuserinfo WHERE id=#{id}
+	</select>
+	<select id="vipCheLiang2" resultType="int">
+		select COUNT(busNum) FROM vipuserinfo WHERE id=#{id}
+	</select>
+	<!-- 商户账户 -->
+	<select id="gName" resultType="Gasstation">
+		select siteName,contact,mobilePhone,detaileAddress from gasstation where id=#{id}
+	</select>
+</mapper>

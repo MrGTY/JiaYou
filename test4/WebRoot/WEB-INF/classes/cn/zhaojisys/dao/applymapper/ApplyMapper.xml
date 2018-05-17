@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zhaojisys.dao.applymapper.ApplyMapper">
+     <!-- 查询所有申请信息并分页 -->
+	<resultMap type="gasstation" id="GasstationResult">
+		<result property="siteName" column="siteName" />
+		<result property="code" column="code" />
+	</resultMap>
+	<resultMap type="employeInfo" id="EmployeInfoResult">
+		<result property="loginName" column="loginName" />
+	</resultMap>
+	<resultMap type="ExtractApply" id="ExtractApplyMap">
+		<id property="id" column="id" />
+		<result property="businessType" column="businessType" />
+		<result property="amountDrawn" column="amountDrawn" />
+		<result property="surplusBalance" column="surplusBalance" />
+		<result property="telePhone" column="telePhone" />
+		<result property="applicationTime" column="applicationTime" />
+		<result property="emplId" column="emplId" />
+		<result property="serialNum" column="serialNum" />
+		<result property="approveData" column="approveData" />
+		<result property="applyUserId" column="applyUserId" />
+		<result property="gsId" column="gsId" />
+		<result property="note" column="note" />
+		<result property="status" column="status" />
+		<association property="gasstation" javaType="gasstation"
+			resultMap="GasstationResult" />
+		<association property="employeInfo" javaType="employeInfo"
+			resultMap="EmployeInfoResult" />
+	</resultMap>
+	<select id="selectAllApply" resultMap="ExtractApplyMap">
+		SELECT e.*,g.siteName,g.code,emp.loginName from extractapply
+		e left join employeinfo emp on e.applyUserId=emp.id left join 
+		gasstation g on e.gsId=g.id
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="siteName != null and siteName != ''">
+				and g.siteName like CONCAT ('%',#{siteName},'%')
+			</if>
+			<if test="businessType != null">
+				and e.businessType = #{businessType}
+			</if>
+			<if test="status != null">
+				and e.status = #{status}
+			</if>
+		</trim>
+			order by e.status,e.applicationTime DESC limit #{pageNo},#{pageSize}
+	</select>
+	<!-- 通过Id查询来选择通过还是拒绝 -->
+	<select id="selectAllApplyById" resultMap="ExtractApplyMap">
+		select e.* ,g.code
+		from extractapply
+		e,gasstation g,employeinfo emp where e.gsId=g.id and
+		e.id=#{id}
+	</select>
+
+	<!-- 通过或拒绝申请 -->
+	<update id="updateApply" parameterType="ExtractApply">
+		update extractApply
+		<trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+			<if test="status != null">`status`=#{status},</if>
+			<if test="emplId != null">`emplId`=#{emplId},</if>
+			<if test="serialNum != null">`serialNum`=#{serialNum},</if>
+			<if test="approveData != null">`approveData`=#{approveData},</if>
+		</trim>
+	</update>
+
+	<!-- 总数 -->
+	<select id="count" resultType="int">
+		select count(1) from extractapply
+		e left join employeinfo emp on e.applyUserId=emp.id left join 
+		gasstation g on e.gsId=g.id
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="siteName != null and siteName != ''">
+				and g.siteName like CONCAT ('%',#{siteName},'%')
+			</if>
+			<if test="businessType != null">
+				and e.businessType = #{businessType}
+			</if>
+			<if test="status != null">
+				and e.status = #{status}
+			</if>
+		</trim>
+	</select>
+	<select id="selectExtractApplyById" resultType="ExtractApply">
+		select *from extractApply where id=#{id}
+	</select>
+</mapper>

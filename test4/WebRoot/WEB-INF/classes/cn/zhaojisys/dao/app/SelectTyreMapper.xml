@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhaojisys.dao.app.SelectTyreMapper">
+	
+	<!-- 会员轮胎消费记录 -->
+	<resultMap type="Tyredatails" id="Tyredatailsresult" >
+		<result property="operationData" column="operationData"/>
+		<result property="quantity" column="quantity"/>
+		<result property="uptyreType" column="uptyreType"/>
+		<result property="typrMaterial" column="typrMaterial"/>
+		<result property="typrSpec" column="typrSpec"/>
+		<result property="zdid" column="zdid"/>
+		<result property="expenditure" column="expenditure"/>
+		<result property="balance" column="balance"/>
+		<association property="vipuserinfo" javaType="Vipuserinfo" resultMap="Vipuserinforesult"/>
+		<association property="gasstation" javaType="Gasstation" resultMap="Gasstationresult"/>
+	</resultMap>
+	<select id="getTyrelist" resultMap="Tyredatailsresult">
+		SELECT g.siteName,t.quantity,t.expenditure,t.typrMaterial,t.typrSpec,t.operationData,g.MobilePhone,t.zdid,t.uptyreType
+		FROM vipuserinfo v, tyredatails t LEFT JOIN gasstation g ON t.zdid=g.id
+		WHERE v.id=t.vipUserId and v.deleteTag=1 and t.infotype=1
+		<trim>
+			<if test="id!=null">
+				and t.vipUserId=#{id}
+			</if>
+		</trim>    
+		 GROUP BY t.id order by t.operationData DESC limit #{pageNo},#{pageSize}
+	</select>
+
+	<!-- 会员燃油消费记录 -->
+	<resultMap type="Vipuserinfo" id="Vipuserinforesult">
+		<id property="id" column="id"/>
+		<result property="vipName" column="vipName"/>
+		<result property="qkBalance" column="qkBalance"/>
+	</resultMap>
+	<resultMap type="Gasstation" id="Gasstationresult">
+		<id property="id" column="id"/>
+		<result property="siteName" column="siteName"/>
+		<result property="mobilePhone" column="MobilePhone"/>
+	</resultMap>
+	<resultMap type="oilrecord" id="Oilrecordresult">
+		<result property="operationTime" column="operationTime"/>
+		<result property="operationType" column="operationType"/>
+		<result property="friendId" column="friendId"/>
+		<result property="gsId" column="gsId"/>
+		<result property="income" column="income"/>
+		<result property="upoiltype" column="upoiltype"/>
+		<result property="expenditure" column="expenditure"/>
+		<result property="remaining" column="remaining"/>
+		<association property="vipuserinfo" javaType="Vipuserinfo" resultMap="Vipuserinforesult"/>
+		<association property="gasstation" javaType="Gasstation" resultMap="Gasstationresult"/>
+	</resultMap>
+	<select id="getOilrelist" resultMap="Oilrecordresult">
+		SELECT o.income,o.remaining,o.operationTime,o.expenditure,g.siteName,o.gsId,o.friendId
+		FROM vipuserinfo v,oilrecord o LEFT JOIN gasstation g ON o.gsId=g.id 
+		WHERE v.id=o.vipUserId and v.deleteTag=1 and o.infotype=1
+		<trim>
+			<if test="id!=null">
+				and o.vipUserId=#{id}
+			</if>
+		</trim>    
+		  GROUP BY o.id  order by o.operationTime DESC  limit #{pageNo},#{pageSize}
+	</select>
+	
+	<!-- 查询加油站点列表 -->
+	<select id="getGassOlist" resultType="Gasstation">
+		SELECT siteName,coverRadius,MobilePhone,id,longitude,latitude FROM gasstation 
+		WHERE gsType=#{type} AND status=1 AND logicId=1 ORDER BY coverRadius LIMIT #{pageNo},#{pageSize}
+	</select>
+	
+	<!-- 查询轮胎站点列表 -->
+	<select id="getGassTlist" resultType="Gasstation">
+		SELECT siteName,coverRadius,MobilePhone,id ,tyreBrand,longitude,latitude FROM gasstation 
+		WHERE gsType=#{type} AND status=1 AND logicId=1 ORDER BY coverRadius LIMIT #{pageNo},#{pageSize}
+	</select>
+		
+	<!-- 查询商户轮胎收支记录 -->
+	<resultMap type="Vipuserinfo" id="vipResult">
+		<id property="id" column="id"/>
+		<result property="vipName" column="vipName"/>
+	</resultMap>
+	<resultMap type="Tyredatails" id="TyredatailsResult2">
+		<id property="id" column="id"/>
+		<result property="typrSpec" column="typrSpec"/>
+		<result property="income" column="income"/>
+		<result property="typrMaterial" column="typrMaterial"/>
+		<result property="quantity" column="quantity"/>
+		<result property="expenditure" column="expenditure"/>
+		<result property="operationData" column="operationData"/>
+		<association property="vipuserinfo" javaType="Vipuserinfo" resultMap="vipResult"/>
+	</resultMap>
+	<select id="getStyrelist" resultMap="TyredatailsResult2">
+		SELECT t.typrSpec,t.typrMaterial,t.quantity,t.expenditure,t.operationData,t.income, v.vipName,v.id
+		FROM tyredatails t ,vipuserinfo v
+		WHERE   t.zdid =#{id}  AND v.id=t.vipUserId and t.infotype=2
+		order by t.operationData DESC limit 0,10
+	</select>
+	
+	<!-- 查询轮胎信息 -->
+	<select id="getTyreinfo" resultType="shop">
+		SELECT marque,brand,material,specifications,price FROM shop  WHERE id=#{id}  
+	</select>
+	
+	<!-- 查询会员信息 -->
+	<select id="getVipinfo" resultType="Vipuserinfo">
+		SELECT id,vipName,tyreBalance,busNum,phoneNum,oilMass FROM vipuserinfo where id =#{vid}
+	</select>
+	<!-- 查询站点信息 -->
+	<select id="getGassinfo" resultType="Gasstation">
+		SELECT 	id,siteName,charge FROM gasstation where id=#{gid}
+	</select>
+	
+	<!-- 修改密码 -->
+	<update id="updatePwd">
+		UPDATE vipuserinfo  SET password=#{password} WHERE phoneNum=#{mobile} 
+	</update>
+	<!-- 通过手机号查询是否有该用户 -->
+		<select id="selectVip" resultType="Vipuserinfo">
+			SELECT * FROM  vipuserinfo WHERE  phoneNum= #{mobile}
+		</select>
+	
+	<!-- 插入推送消息 -->
+	<insert id="insertinfo" parameterType="Messages">
+		INSERT INTO message (msgType,content,operationTime,
+		<if test="vipId!=null">
+				vipId)
+		</if>
+		<if test="gsId!=null">
+				gsId)
+		</if> VALUES 
+		(#{msgType},#{content},#{operationTime},
+		<if test="vipId!=null">
+				#{vipId})
+		</if>
+		<if test="gsId!=null">
+				#{gsId})
+		</if>
+	</insert>
+	<!-- 通过站点Id查询 站点二维码 -->
+	<select id="getQrCodeImg" resultType="Gasstation">
+		select id,code,QrCodeImg,siteName from gasstation  where id=#{gid}
+	</select>
+	<!-- 商户修改密码 -->
+	<update id="shupdatePwd">
+		UPDATE gasstation  SET password=#{password} WHERE mobilePhone=#{mobile} 
+	</update>
+	<!-- 通过手机号查询是否有该商户 -->
+	<select id="selectGass" resultType="Gasstation">
+		SELECT * FROM  gasstation WHERE  mobilePhone= #{mobile}
+	</select>
+		<!-- 查询加油量与服务费 -->
+	<select id="getfee" resultType="oilrecord">
+		select o.id,o.fee,o.income,o.operationTime from oilrecord o 
+		where o.gsId=#{gid} and o.balance=0
+	</select>
+	<insert id="feeAdd" parameterType="Feetable">
+		insert into feetable(createtime,oilmass,chargefee,state,idc,gassid) 
+		values(#{createtime},#{oilmass},#{chargefee},#{state},#{idc},#{gassid})
+	</insert>
+	<!-- 修改燃油id对应b状态 -->
+	<update id="updateBalance">
+		update oilrecord set balance=1 where id in 
+			<foreach collection="idc" item="idc" 
+  			open="(" separator="," close=")">
+  				#{idc}
+  			</foreach>
+	</update>
+</mapper>

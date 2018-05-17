@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zhaojisys.dao.appversion.AppMapper">
+	<!-- 查询所有版本信息 -->
+	<select id="selectAllApp" resultType="AppVersion">
+		select * from appversion
+		ORDER BY uploadTime DESC
+	</select>
+
+	<!-- 根据Id选择 -->
+	<select id="selectAllAppById" parameterType="String" resultType="AppVersion">
+		select * from appversion where id=#{id}
+	</select>
+
+	<!-- 上传版本信息 -->
+	<insert id="addApp" parameterType="AppVersion">
+		insert into appversion
+		(`versionType`,`versionNumber`,`downloadLink`) values
+		(#{versionType},#{versionNumber},#{downloadLink})
+	</insert>
+
+	<!-- 删除版本信息 -->
+	<delete id="deleteApp" parameterType="String">
+		delete from appversion
+		where id=#{id}
+	</delete>
+</mapper>
